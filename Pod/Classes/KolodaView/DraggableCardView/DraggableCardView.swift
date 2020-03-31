@@ -1,11 +1,3 @@
-//
-//  DraggableCardView.swift
-//  Koloda
-//
-//  Created by Eugene Andreyev on 4/23/15.
-//  Copyright (c) 2015 Yalantis. All rights reserved.
-//
-
 import UIKit
 import pop
 
