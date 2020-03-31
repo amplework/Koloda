@@ -25,7 +25,7 @@ private let defaultAlphaValueSemiTransparent: CGFloat = 0.7
 
 // Direction of visible cards
 public enum VisibleCardsDirection: Int {
-    case top, bottom
+    case top, bottom, right, left
 }
 
 public protocol KolodaViewDataSource: class {
@@ -166,6 +166,8 @@ open class KolodaView: UIView, DraggableCardDelegate {
         }
     }
     
+
+    
     // MARK: Configurations
     
     private func setupDeck() {
@@ -218,6 +220,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
         let width = self.frame.width * pow(scalePercent, CGFloat(index))
         let xOffset = (self.frame.width - width) / 2
         let height = (self.frame.height - bottomOffset - topOffset) * pow(scalePercent, CGFloat(index))
+        
 
         if visibleCardsDirection == .bottom {
             let multiplier: CGFloat = index > 0 ? 1.0 : 0.0
@@ -226,13 +229,79 @@ open class KolodaView: UIView, DraggableCardDelegate {
             let frame = CGRect(x: xOffset, y: yOffset, width: width, height: height)
             
             return frame
-        } else {
+        } else if visibleCardsDirection == .top{
             let multiplier: CGFloat = index < (countOfVisibleCards - 1) ? 1.0 : 0.0
             let nextCardFrame = index < (countOfVisibleCards - 1) ? frameForCard(at: min(index + 1, (countOfVisibleCards - 1))) : .zero
             let yOffset = (nextCardFrame.origin.y + backgroundCardsTopMargin) * multiplier
             let frame = CGRect(x: xOffset, y: yOffset, width: width, height: height)
             
             return frame
+        } else if visibleCardsDirection == .right{
+            let multiplier: CGFloat = CGFloat(Double(index) * 0.5) //< (countOfVisibleCards - 1) ? 1.0 : 0.0
+            let nextCardFrame = index < (countOfVisibleCards - 1) ? frameForCard(at: min(index + 1, (countOfVisibleCards - 1))) : .zero
+            print("Frame -. \(nextCardFrame)")
+            //let yOffset = (prevCardFrame.width - width + prevCardFrame.origin.x + backgroundCardsTopMargin)
+            let xOffset = (nextCardFrame.width - width + nextCardFrame.origin.x + defaultBackgroundCardsLeftMargin) * multiplier
+            print(multiplier)
+     
+            let xoff = multiplier * 10.0 - 6.0
+            if multiplier == 0.0{
+
+                let frame = CGRect(x: (xoff + 5.0), y: 0, width: self.frame.width - 20.0 , height: self.frame.height)
+                print(frame.debugDescription)
+                
+                return frame
+            }else if multiplier == 0.5{
+
+                let frame = CGRect(x: (xoff + 1.0), y: 10, width: self.frame.width - 10.0 , height: self.frame.height - 20.0)
+                print(frame.debugDescription)
+                
+                return frame
+            }else{
+     
+                let frame = CGRect(x: xoff, y: 20, width: self.frame.width  , height: self.frame.height - 40.0)
+                print(frame.debugDescription)
+                
+                return frame
+            }
+            
+           
+       
+        
+            
+        }else{
+            let multiplier: CGFloat = CGFloat(Double(index) * 0.5)
+            //let multiplier: CGFloat = index < (countOfVisibleCards - 1) ? 1.0 : 0.0
+            let nextCardFrame = index < (countOfVisibleCards - 1) ? frameForCard(at: min(index + 1, (countOfVisibleCards - 1))) : .zero
+            //let yOffset = (prevCardFrame.width - width + prevCardFrame.origin.x + backgroundCardsTopMargin)
+            let xOffset = (nextCardFrame.width - width + nextCardFrame.origin.x + defaultBackgroundCardsLeftMargin) * multiplier
+            
+            
+//            let frame = CGRect(x: xOffset, y: 0, width: self.frame.width, height: self.frame.height)
+//            print(frame.debugDescription)
+//
+//            return frame
+            
+            let xoff = multiplier * 10.0 - 10.0
+            if multiplier == 0.0{
+                
+                let frame = CGRect(x: -(xoff - 7.0) , y: 0, width: self.frame.width - 16.0 , height: self.frame.height)
+                print(frame.debugDescription)
+                
+                return frame
+            }else if multiplier == 0.5{
+                
+                let frame = CGRect(x: -(xoff - 3.0), y: 10, width: self.frame.width - 8.0 , height: self.frame.height - 20)
+                print(frame.debugDescription)
+                
+                return frame
+            }else{
+                
+                let frame = CGRect(x: -xoff, y: 20, width: self.frame.width  , height: self.frame.height - 40)
+                print(frame.debugDescription)
+                
+                return frame
+            }
         }
     }
     
@@ -311,7 +380,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
     public func applyAppearAnimationIfNeeded() {
         if !animationSemaphore.isAnimating {
             if let shouldApply = delegate?.kolodaShouldApplyAppearAnimation(self), shouldApply == true {
-                applyAppearAnimation()
+                //applyAppearAnimation()
             }
         }
     }
